@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Telefone;
+import com.autobots.automanager.modelo.TelefoneAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
 
 @RestController
@@ -42,13 +43,13 @@ public class TelefoneControle {
 	@PutMapping("/atualizar/{clienteId}/{telefoneId}")
 	public void atualizarTelefone(@PathVariable Long clienteId, @PathVariable Long telefoneId, @RequestBody Telefone novoTelefone) {
 		Cliente cliente = repositorioCliente.getById(clienteId);
+		TelefoneAtualizador atualizador = new TelefoneAtualizador();
 		
 	    List<Telefone> telefones = cliente.getTelefones();
 	    for (Telefone telefone : telefones) {
 	    	
 	        if (telefone.getId().equals(telefoneId)) {
-	            telefone.setDdd(novoTelefone.getDdd());
-	            telefone.setNumero(novoTelefone.getNumero());
+	            atualizador.atualizar(telefone, novoTelefone);
 	            
 	            break;
 	        }
@@ -56,6 +57,7 @@ public class TelefoneControle {
 	    
 	    repositorioCliente.save(cliente);
 	}
+	
 	
 	@DeleteMapping("/excluir/{clienteId}/{telefoneId}")
 	public void deletarTelefone(@PathVariable Long clienteId, @PathVariable Long telefoneId) {

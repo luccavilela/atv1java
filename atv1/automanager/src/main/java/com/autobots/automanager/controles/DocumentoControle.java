@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Documento;
+import com.autobots.automanager.modelo.ClienteAtualizador;
+import com.autobots.automanager.modelo.DocumentoAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
 
 @RestController
@@ -42,21 +44,20 @@ public class DocumentoControle {
 	@PutMapping("/atualizar/{clienteId}/{documentoId}")
 	public void atualizarDocumento(@PathVariable Long clienteId, @PathVariable Long documentoId, @RequestBody Documento novoDocumento) {
 		Cliente cliente = repositorioCliente.getById(clienteId);
+		DocumentoAtualizador atualizador = new DocumentoAtualizador();
 		
 	    List<Documento> documentos = cliente.getDocumentos();
 	    for (Documento documento : documentos) {
 	    	
 	        if (documento.getId().equals(documentoId)) {
-	        	documento.setTipo(novoDocumento.getTipo());
-	            documento.setNumero(novoDocumento.getNumero());
-	            
-	            
+	        	atualizador.atualizar(documento, novoDocumento);
 	            break;
 	        }
 	    }
 	    
 	    repositorioCliente.save(cliente);
 	}
+	
 	
 	@DeleteMapping("/excluir/{clienteId}/{documentoId}")
 	public void deletarDocumento(@PathVariable Long clienteId, @PathVariable Long documentoId) {
