@@ -14,15 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Documento;
-import com.autobots.automanager.modelo.ClienteAtualizador;
 import com.autobots.automanager.modelo.DocumentoAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
+import com.autobots.automanager.repositorios.DocumentoRepositorio;
 
 @RestController
 @RequestMapping("/documento")
 public class DocumentoControle {
 	@Autowired 
 	private ClienteRepositorio repositorioCliente;
+	
+	@Autowired 
+	private DocumentoRepositorio repositorioDocumento;
 	
 	@PostMapping("/adicionar/{clienteId}")
     public void adicionarDocumento(@PathVariable Long clienteId, @RequestBody Documento documento) {
@@ -41,21 +44,14 @@ public class DocumentoControle {
 
 	}
 	
-	@PutMapping("/atualizar/{clienteId}/{documentoId}")
-	public void atualizarDocumento(@PathVariable Long clienteId, @PathVariable Long documentoId, @RequestBody Documento novoDocumento) {
-		Cliente cliente = repositorioCliente.getById(clienteId);
+	@PutMapping("/atualizar/{documentoId}")
+	public void atualizarDocumento(@PathVariable Long documentoId, @RequestBody Documento novoDocumento) {
+		Documento documento = repositorioDocumento.getById(documentoId);
 		DocumentoAtualizador atualizador = new DocumentoAtualizador();
+		atualizador.atualizar(documento, novoDocumento);
 		
-	    List<Documento> documentos = cliente.getDocumentos();
-	    for (Documento documento : documentos) {
-	    	
-	        if (documento.getId().equals(documentoId)) {
-	        	atualizador.atualizar(documento, novoDocumento);
-	            break;
-	        }
-	    }
-	    
-	    repositorioCliente.save(cliente);
+	   
+	    repositorioDocumento.save(documento);
 	}
 	
 	

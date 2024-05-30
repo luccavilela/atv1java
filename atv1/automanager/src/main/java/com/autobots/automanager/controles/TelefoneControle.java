@@ -16,12 +16,18 @@ import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Telefone;
 import com.autobots.automanager.modelo.TelefoneAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
+import com.autobots.automanager.repositorios.TelefoneRepositorio;
 
 @RestController
 @RequestMapping("/telefone")
 public class TelefoneControle {
 	@Autowired 
 	private ClienteRepositorio repositorioCliente;
+	
+	@Autowired
+	private TelefoneRepositorio repositorioTelefone;
+	
+	
 	
 	@PostMapping("/adicionar/{clienteId}")
     public void adicionarTelefone(@PathVariable Long clienteId, @RequestBody Telefone telefone) {
@@ -39,23 +45,15 @@ public class TelefoneControle {
 	    return cliente.getTelefones();
 
 	}
-	
-	@PutMapping("/atualizar/{clienteId}/{telefoneId}")
-	public void atualizarTelefone(@PathVariable Long clienteId, @PathVariable Long telefoneId, @RequestBody Telefone novoTelefone) {
-		Cliente cliente = repositorioCliente.getById(clienteId);
+
+	@PutMapping("/atualizar/{telefoneId}")
+	public void atualizarTelefone(@PathVariable Long telefoneId, @RequestBody Telefone novoTelefone) {
+		Telefone telefone = repositorioTelefone.getById(telefoneId);
 		TelefoneAtualizador atualizador = new TelefoneAtualizador();
-		
-	    List<Telefone> telefones = cliente.getTelefones();
-	    for (Telefone telefone : telefones) {
-	    	
-	        if (telefone.getId().equals(telefoneId)) {
-	            atualizador.atualizar(telefone, novoTelefone);
-	            
-	            break;
-	        }
-	    }
+		atualizador.atualizar(telefone, novoTelefone);
 	    
-	    repositorioCliente.save(cliente);
+	    
+	    repositorioTelefone.save(telefone);
 	}
 	
 	

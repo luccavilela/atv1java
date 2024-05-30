@@ -1,6 +1,5 @@
 package com.autobots.automanager.controles;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,12 +13,16 @@ import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Endereco;
 import com.autobots.automanager.modelo.EnderecoAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
+import com.autobots.automanager.repositorios.EnderecoRepositorio;
 
 @RestController
 @RequestMapping("/endereco")
 public class EnderecoControle {
 	@Autowired 
 	private ClienteRepositorio repositorioCliente;
+	
+	@Autowired 
+	private EnderecoRepositorio repositorioEndereco;
 	
 	@GetMapping("/endereco/{clienteId}")
 	public Endereco obterEnderecoCliente(@PathVariable Long clienteId) {
@@ -28,13 +31,13 @@ public class EnderecoControle {
 	    return cliente.getEndereco();
 	}
 	
-	@PutMapping("/atualizar/{clienteId}")
-    public void atualizarEndereco(@PathVariable Long clienteId, @RequestBody Endereco novoEndereco) {
-        Cliente cliente = repositorioCliente.getById(clienteId);
+	@PutMapping("/atualizar/{enderecoId}")
+    public void atualizarEndereco(@PathVariable Long enderecoId, @RequestBody Endereco novoEndereco) {
+        Endereco endereco = repositorioEndereco.getById(enderecoId);
         EnderecoAtualizador atualizador = new EnderecoAtualizador();
-        atualizador.atualizar(cliente.getEndereco(), novoEndereco);
-        repositorioCliente.save(cliente);
+        atualizador.atualizar(endereco, novoEndereco);
         
+        repositorioEndereco.save(endereco);
     }
 	
 }
